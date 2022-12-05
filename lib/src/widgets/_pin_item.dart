@@ -9,26 +9,51 @@ class _PinItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pinTheme = _pinTheme(index);
+    final isActiveField = index == state.pin.length && state.hasFocus;
 
     return Flexible(
-      child: AnimatedContainer(
-        height: pinTheme.height,
-        width: pinTheme.width,
-        constraints: pinTheme.constraints,
-        padding: pinTheme.padding,
-        margin: pinTheme.margin,
-        decoration: pinTheme.decoration,
-        alignment: state.widget.pinContentAlignment,
-        duration: state.widget.animationDuration,
-        curve: state.widget.animationCurve,
-        child: AnimatedSwitcher(
-          switchInCurve: state.widget.animationCurve,
-          switchOutCurve: state.widget.animationCurve,
+      child: Neumorphic(
+        padding: EdgeInsets.only(
+          top: isActiveField ? 6 : 0,
+        ),
+        style: NeumorphicStyle(
+          depth: isActiveField ? -30 : 0,
+          lightSource: const LightSource(0, 0),
+          shape: NeumorphicShape.concave,
+          color:
+              isActiveField ? const Color(0xffEDEDED) : const Color(0xffFFFFFF),
+          boxShape: NeumorphicBoxShape.roundRect(
+            BorderRadius.circular(8),
+          ),
+          border: isActiveField
+              ? const NeumorphicBorder(
+                  color: Color(0xff145041),
+                  width: 2,
+                )
+              : const NeumorphicBorder(
+                  color: Color(0xffBBBCBC),
+                  width: 1,
+                ),
+        ),
+        child: AnimatedContainer(
+          height: pinTheme.height,
+          width: pinTheme.width,
+          constraints: pinTheme.constraints,
+          padding: pinTheme.padding,
+          margin: pinTheme.margin,
+          decoration: pinTheme.decoration,
+          alignment: state.widget.pinContentAlignment,
           duration: state.widget.animationDuration,
-          transitionBuilder: (child, animation) {
-            return _getTransition(child, animation);
-          },
-          child: _buildFieldContent(index, pinTheme),
+          curve: state.widget.animationCurve,
+          child: AnimatedSwitcher(
+            switchInCurve: state.widget.animationCurve,
+            switchOutCurve: state.widget.animationCurve,
+            duration: state.widget.animationDuration,
+            transitionBuilder: (child, animation) {
+              return _getTransition(child, animation);
+            },
+            child: _buildFieldContent(index, pinTheme),
+          ),
         ),
       ),
     );
